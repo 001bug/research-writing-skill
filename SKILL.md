@@ -212,3 +212,11 @@ allowed-tools: Read Write Edit Bash WebSearch
 5. **语言默认规则** — 毕业论文默认中文，期刊根据要求
 6. **结构模板** — 7种论文类型的默认结构模板
 7. **交互优化** — 让用户少做选择，多做确认
+
+
+## DeepSeek Harness (DSH)
+
+DSH 用户级安装与 Linux 工具环境见 `.dsh/INSTALL.md`；运行路径与工具映射见 `.dsh/RUNTIME.md`。
+所有 19 个子技能分别注册，完整仓库中的脚本、模板与参考资料必须保留。
+Linux 门禁使用 `scripts/check_skill_integrity.py` 和 `scripts/research_quality_gate.py`；
+PowerShell 入口保留并转调相同实现。

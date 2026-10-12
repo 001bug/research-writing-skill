@@ -4,6 +4,24 @@ description: Use when writing literature review sections - guides searching, org
 allowed-tools: Read, Write, Edit, Bash, WebSearch, WebFetch
 ---
 
+## DSH 运行约定
+
+仅在 DeepSeek Harness 中适用：先根据 `skill` 工具返回的 `resourceBase.path`
+解析真实技能目录，再读取资源根目录的 `.dsh/RUNTIME.md`，按其中约定执行。
+不要猜测仓库位置，也不要假定当前目录就是技能仓库。
+
+```bash
+# 将占位符替换为本次 skill 工具返回的 resourceBase.path（保留引号）。
+SKILL_DIR="$(realpath '<resourceBase.path>')"
+RESEARCH_WRITING_ROOT="$(dirname "$(dirname "$SKILL_DIR")")"
+RESEARCH_WRITING_PYTHON="${DSH_HOME:-$HOME/.dsh}/research-writing/.venv/bin/python"
+PAPER_ROOT="$(pwd -P)"
+cat "$RESEARCH_WRITING_ROOT/.dsh/RUNTIME.md"
+```
+
+脚本与内置模板使用资源根目录的绝对路径；论文、用户模板和计划写入当前论文工作区。
+以上变量只在当前 shell 调用有效，后续调用应重新设置或使用已经解析的绝对路径。
+
 # 文献综述
 
 本技能指导文献搜索、整理和综述写作。
@@ -43,22 +61,22 @@ allowed-tools: Read, Write, Edit, Bash, WebSearch, WebFetch
 
 ```bash
 # 基本搜索
-python scripts/scholar_search.py "deep learning transformer"
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "deep learning transformer"
 
 # 指定数据库
-python scripts/scholar_search.py "neural network" --sources pubmed,crossref
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "neural network" --sources pubmed,crossref
 
 # 年份过滤（当前是2026年，建议使用近年范围）
-python scripts/scholar_search.py "machine learning" --year 2023-2026
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "machine learning" --year 2023-2026
 
 # 输出 BibTeX 格式（用于 LaTeX 论文）
-python scripts/scholar_search.py "landslide detection" --format bibtex -o refs.bib
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "landslide detection" --format bibtex -o refs.bib
 
 # 输出 APA 引用格式
-python scripts/scholar_search.py "attention mechanism" --format apa --limit 5
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "attention mechanism" --format apa --limit 5
 
 # JSON 输出（用于程序处理）
-python scripts/scholar_search.py "quantum computing" --format json -o results.json
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "quantum computing" --format json -o results.json
 ```
 
 ### 输出格式示例
@@ -132,23 +150,23 @@ Yulin Xu and Chaojun Ouyang (2024). CAS Landslide Dataset...
 
 ```bash
 # 搜索所有数据库，输出 JSON
-python scripts/scholar_search.py "your query" --format json -o results.json
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "your query" --format json -o results.json
 
 # 指定数据库和年份
-python scripts/scholar_search.py "deep learning" --sources crossref,semanticscholar --year 2023-2026
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "deep learning" --sources crossref,semanticscholar --year 2023-2026
 
 # 仅搜索 PubMed（生物医学）
-python scripts/scholar_search.py "hippocampus memory" --sources pubmed --limit 20
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "hippocampus memory" --sources pubmed --limit 20
 ```
 
 #### BibTeX 输出（用于 LaTeX 论文）
 
 ```bash
 # 输出 BibTeX 格式
-python scripts/scholar_search.py "landslide detection" --format bibtex -o refs.bib
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "landslide detection" --format bibtex -o refs.bib
 
 # 直接输出到控制台
-python scripts/scholar_search.py "transformer attention" --format bibtex --limit 5
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "transformer attention" --format bibtex --limit 5
 ```
 
 **BibTeX 输出示例**：
@@ -167,13 +185,13 @@ python scripts/scholar_search.py "transformer attention" --format bibtex --limit
 
 ```bash
 # APA 格式
-python scripts/scholar_search.py "neural network" --format apa --limit 3
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "neural network" --format apa --limit 3
 
 # MLA 格式
-python scripts/scholar_search.py "machine learning" --format mla --limit 3
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "machine learning" --format mla --limit 3
 
 # Chicago 格式
-python scripts/scholar_search.py "attention mechanism" --format chicago --limit 3
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "attention mechanism" --format chicago --limit 3
 ```
 
 **APA 输出示例**：
@@ -354,7 +372,7 @@ Author, A. A., & Author, B. B. (Year). Title. Journal, Volume(Issue), pages.
 **执行搜索命令**：
 
 ```bash
-python scripts/scholar_search.py "搜索关键词" --sources crossref,semanticscholar --year 2020-2024 --limit 20 --format json
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "搜索关键词" --sources crossref,semanticscholar --year 2020-2024 --limit 20 --format json
 ```
 
 **输出示例**：
@@ -437,7 +455,7 @@ python scripts/scholar_search.py "搜索关键词" --sources crossref,semanticsc
 curl -s "https://api.crossref.org/works/10.1000/doi123"
 
 # 验证 BibTeX 文件
-python scripts/scholar_search.py "your query" --format bibtex --output refs.bib
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/scholar_search.py" "your query" --format bibtex --output refs.bib
 ```
 
 ### 6.2 PDF 文献解析
@@ -446,13 +464,13 @@ python scripts/scholar_search.py "your query" --format bibtex --output refs.bib
 
 ```bash
 # 提取 PDF 文本
-python scripts/pdf_parser.py paper.pdf --output paper_text.txt
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/pdf_parser.py" paper.pdf --output paper_text.txt
 
 # 提取结构和摘要
-python scripts/pdf_parser.py paper.pdf --sections --abstract --json paper_info.json
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/pdf_parser.py" paper.pdf --sections --abstract --json paper_info.json
 
 # 总结 PDF 内容
-python scripts/pdf_parser.py paper.pdf --summarize
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/pdf_parser.py" paper.pdf --summarize
 ```
 
 **输出内容**：

@@ -3,6 +3,24 @@ name: writing-chapters
 description: Use when writing paper chapters - requires completed brainstorming, writes one chapter at a time with user confirmation
 ---
 
+## DSH 运行约定
+
+仅在 DeepSeek Harness 中适用：先根据 `skill` 工具返回的 `resourceBase.path`
+解析真实技能目录，再读取资源根目录的 `.dsh/RUNTIME.md`，按其中约定执行。
+不要猜测仓库位置，也不要假定当前目录就是技能仓库。
+
+```bash
+# 将占位符替换为本次 skill 工具返回的 resourceBase.path（保留引号）。
+SKILL_DIR="$(realpath '<resourceBase.path>')"
+RESEARCH_WRITING_ROOT="$(dirname "$(dirname "$SKILL_DIR")")"
+RESEARCH_WRITING_PYTHON="${DSH_HOME:-$HOME/.dsh}/research-writing/.venv/bin/python"
+PAPER_ROOT="$(pwd -P)"
+cat "$RESEARCH_WRITING_ROOT/.dsh/RUNTIME.md"
+```
+
+脚本与内置模板使用资源根目录的绝对路径；论文、用户模板和计划写入当前论文工作区。
+以上变量只在当前 shell 调用有效，后续调用应重新设置或使用已经解析的绝对路径。
+
 # 章节写作
 
 负责论文各章节的实际写作。必须在头脑风暴完成、项目结构创建后调用。
@@ -140,7 +158,7 @@ digraph writing_chapters {
 - progress.md：已完成章节
 - notes.md：用户偏好和特殊要求
 
-**参考结构模板**: `skills/brainstorming-research/templates.md` 了解不同论文类型的标准结构。
+**参考结构模板**: `$RESEARCH_WRITING_ROOT/skills/brainstorming-research/templates.md` 了解不同论文类型的标准结构。
 
 ### 2. 确认当前章节
 

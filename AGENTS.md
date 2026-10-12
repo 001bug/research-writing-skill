@@ -29,8 +29,16 @@
 - 任何写作任务前必须完成头脑风暴
 - 中型任务必须有任务包、两阶段 review 和 capability-use audit
 - 引言和相关工作必须先完成 evidence map
-- skill 改造后运行 `scripts/check_skill_integrity.ps1`
-- 稿件交付前运行 `scripts/research_quality_gate.ps1 -ProjectPath <paper-project>`
+- skill 改造后运行 `scripts/check_skill_integrity.py --root <skill-root>`（PowerShell 入口 `scripts/check_skill_integrity.ps1` 转调同一实现）
+- 稿件交付前运行 `scripts/research_quality_gate.py --project-path <paper-project>`（PowerShell 入口 `scripts/research_quality_gate.ps1` 转调同一实现）
 - 必须创建 plan/ 目录记录项目信息
 - 每章写完必须让用户确认
 - 绝不编造文献
+
+
+## DeepSeek Harness (DSH)
+
+DSH 用户级安装与 Linux 工具环境见 `.dsh/INSTALL.md`；运行路径与工具映射见 `.dsh/RUNTIME.md`。
+所有 19 个子技能分别注册，完整仓库中的脚本、模板与参考资料必须保留。
+Linux 门禁使用 `scripts/check_skill_integrity.py` 和 `scripts/research_quality_gate.py`；
+PowerShell 入口保留并转调相同实现。

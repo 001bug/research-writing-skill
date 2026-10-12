@@ -3,6 +3,24 @@ name: paper-orchestration
 description: Use when a research-writing task spans multiple sections, medium-sized revisions, full-paper drafting, or repeated quality failures
 ---
 
+## DSH 运行约定
+
+仅在 DeepSeek Harness 中适用：先根据 `skill` 工具返回的 `resourceBase.path`
+解析真实技能目录，再读取资源根目录的 `.dsh/RUNTIME.md`，按其中约定执行。
+不要猜测仓库位置，也不要假定当前目录就是技能仓库。
+
+```bash
+# 将占位符替换为本次 skill 工具返回的 resourceBase.path（保留引号）。
+SKILL_DIR="$(realpath '<resourceBase.path>')"
+RESEARCH_WRITING_ROOT="$(dirname "$(dirname "$SKILL_DIR")")"
+RESEARCH_WRITING_PYTHON="${DSH_HOME:-$HOME/.dsh}/research-writing/.venv/bin/python"
+PAPER_ROOT="$(pwd -P)"
+cat "$RESEARCH_WRITING_ROOT/.dsh/RUNTIME.md"
+```
+
+脚本与内置模板使用资源根目录的绝对路径；论文、用户模板和计划写入当前论文工作区。
+以上变量只在当前 shell 调用有效，后续调用应重新设置或使用已经解析的绝对路径。
+
 # Paper Orchestration
 
 This skill controls the workflow around the writing skills. It prevents "one prompt writes the paper" behavior by forcing stage detection, task packets, review gates, and a capability-use audit.
@@ -37,11 +55,34 @@ Create `plan/chapter-architecture.md` before drafting. It must list the exact re
 
 ```markdown
 ## Required chapter files
-- chapters/01_Introduction.md | min_chars=4500 | agent=required | placeholders=no
-- chapters/02_Methodology.md | min_chars=4500 | agent=required | placeholders=no
+- chapters/01_Introduction.md | role=introduction | min_chars=4500 | agent=required | placeholders=no
+- chapters/02_Methodology.md | role=methodology | min_chars=4500 | agent=required | placeholders=no
 ```
 
 If this file exists, the quality gate must treat extra or missing chapter files as failures.
+
+## Chapter roles for the Python gate
+
+Each entry in `plan/chapter-architecture.md` must declare `role=` independently of its filename.
+Allowed roles: `abstract`, `introduction`, `related-work`, `methodology`, `body`,
+`empirical-results`, `discussion`, `conclusion`, `references`, `acknowledgements`.
+Use Chinese or English filenames, including spaces. Add `min_citations=` and
+`min_paragraphs=` when the school's requirements differ from the gate defaults.
+Existing plans without roles must be reviewed and updated explicitly; do not infer roles from numbering.
+Citation-marker counts are structural checks, not proof that a source exists or supports a claim.
+
+## DSH chapter delegation
+
+When running in DSH, inspect the currently exposed tools before delegation.
+Use native `subagent` with `description` and a complete standalone `prompt`.
+Include the absolute paper workspace, task packet path, required skill names,
+exclusive chapter ownership, relevant sources and acceptance checks.
+Omit provider/model to inherit the configured defaults; use `run_in_background: false`
+when the next action depends on that chapter's result. For background runs, consume
+DSH's completion notice and inspect the chapter before recording `status=ACCEPTED`.
+A launch receipt is not a completed chapter. Use only the current tool schema.
+If `subagent` is unavailable, ask whether the user accepts the original degraded
+single-agent workflow and record that decision; never invent an agent provenance entry.
 
 ## Multi-Agent Chapter Gate
 

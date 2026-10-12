@@ -15,6 +15,8 @@
 - 学科类型：
 - 论文类型：
 - 目标院校/期刊/会议：
+- 院系、专业、毕业年份：
+- 学校格式文件与导师意见路径：
 - 截止日期：
 
 ## 三、本项目约束
@@ -72,3 +74,17 @@
 - [ ] 已与用户确认输出物与截止时间
 - [ ] 已确认写作偏好（无加粗、段间空一行等）
 - [ ] 已确定本轮优先任务
+
+
+## 九、章节角色与门禁
+
+在 `plan/chapter-architecture.md` 中明确角色和本论文要求，不按文件名或章节编号推断：
+
+```markdown
+- chapters/第一章 绪论.md | role=introduction | min_chars=0 | min_citations=5 | agent=required | placeholders=no
+- chapters/第二章 文献综述.md | role=related-work | min_chars=0 | min_citations=8 | agent=required | placeholders=no
+- chapters/第六章 结论.md | role=conclusion | min_chars=0 | agent=required | placeholders=no
+```
+
+上述数字是工具示例，不是中国高校统一要求。按学校和导师要求调整并记录来源。
+是否使用实证方法应由选题与资料决定；只有 `role=empirical-results` 才要求实验/实证追踪产物。

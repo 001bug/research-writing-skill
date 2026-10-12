@@ -4,6 +4,24 @@ description: Use when about to claim work is complete, a chapter is finished, or
 allowed-tools: Read, Bash, Grep
 ---
 
+## DSH 运行约定
+
+仅在 DeepSeek Harness 中适用：先根据 `skill` 工具返回的 `resourceBase.path`
+解析真实技能目录，再读取资源根目录的 `.dsh/RUNTIME.md`，按其中约定执行。
+不要猜测仓库位置，也不要假定当前目录就是技能仓库。
+
+```bash
+# 将占位符替换为本次 skill 工具返回的 resourceBase.path（保留引号）。
+SKILL_DIR="$(realpath '<resourceBase.path>')"
+RESEARCH_WRITING_ROOT="$(dirname "$(dirname "$SKILL_DIR")")"
+RESEARCH_WRITING_PYTHON="${DSH_HOME:-$HOME/.dsh}/research-writing/.venv/bin/python"
+PAPER_ROOT="$(pwd -P)"
+cat "$RESEARCH_WRITING_ROOT/.dsh/RUNTIME.md"
+```
+
+脚本与内置模板使用资源根目录的绝对路径；论文、用户模板和计划写入当前论文工作区。
+以上变量只在当前 shell 调用有效，后续调用应重新设置或使用已经解析的绝对路径。
+
 # 验证机制
 
 ## 核心原则
@@ -94,6 +112,18 @@ allowed-tools: Read, Bash, Grep
 ✅ [检查 citation slot] [看到：段落 P2 使用 FL-05 + FL-07] "引用位置明确"
 ❌ "相关工作看起来完整" / "这段有学术感"
 ```
+
+### DSH / Linux 验证入口
+
+```bash
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/check_skill_integrity.py" --root "$RESEARCH_WRITING_ROOT"
+"$RESEARCH_WRITING_PYTHON" "$RESEARCH_WRITING_ROOT/scripts/research_quality_gate.py" --project-path "$PAPER_ROOT"
+# 最终交付额外添加 --submission
+```
+
+门禁需要 `plan/chapter-architecture.md` 明确声明章节 `role=`，详见编排技能。
+引用数量只是结构信号，来源真实性、页码和论点支撑仍须逐项核对。
+下面 PowerShell 命令保留为跨平台入口，转调同一份 Python 实现。
 
 ### Skill 完整性验证
 

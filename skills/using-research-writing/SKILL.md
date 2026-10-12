@@ -3,6 +3,24 @@ name: using-research-writing
 description: Use when starting any research writing task - establishes workflow and routes to appropriate skills
 ---
 
+## DSH 运行约定
+
+仅在 DeepSeek Harness 中适用：先根据 `skill` 工具返回的 `resourceBase.path`
+解析真实技能目录，再读取资源根目录的 `.dsh/RUNTIME.md`，按其中约定执行。
+不要猜测仓库位置，也不要假定当前目录就是技能仓库。
+
+```bash
+# 将占位符替换为本次 skill 工具返回的 resourceBase.path（保留引号）。
+SKILL_DIR="$(realpath '<resourceBase.path>')"
+RESEARCH_WRITING_ROOT="$(dirname "$(dirname "$SKILL_DIR")")"
+RESEARCH_WRITING_PYTHON="${DSH_HOME:-$HOME/.dsh}/research-writing/.venv/bin/python"
+PAPER_ROOT="$(pwd -P)"
+cat "$RESEARCH_WRITING_ROOT/.dsh/RUNTIME.md"
+```
+
+脚本与内置模板使用资源根目录的绝对路径；论文、用户模板和计划写入当前论文工作区。
+以上变量只在当前 shell 调用有效，后续调用应重新设置或使用已经解析的绝对路径。
+
 <SUBAGENT-STOP>
 如果你是作为子代理被派发执行特定任务，跳过此技能。
 </SUBAGENT-STOP>
@@ -17,15 +35,20 @@ description: Use when starting any research writing task - establishes workflow 
 
 ## 指令优先级
 
-科研写作技能会覆盖默认系统提示行为，但**用户指令始终优先**：
-
-1. **用户明确指令**（直接请求、CLAUDE.md、AGENTS.md 中的设置）— 最高优先级
-2. **科研写作技能** — 覆盖默认系统行为
-3. **默认系统提示** — 最低优先级
+技能是当前任务的工作指南，必须遵守宿主的系统/开发者指令和有效权限约束。
+用户的明确要求决定任务目标；项目 AGENTS.md 和技能流程在相应范围内适用。
+技能不能提高工具权限，也不能覆盖更高优先级指令。
 
 如果用户说"不需要讨论直接写"，你可以简化流程，但仍需记录到 plan/。
 
 ## 如何访问技能
+
+**在 DeepSeek Harness (DSH) 中：** 使用原生 `skill` 工具，以准确名称加载：
+`{"name":"brainstorming-research"}`。不加 `research-writing/` 前缀。
+先加载 `using-research-writing`，再依次路由到选题讨论、资料与证据、章节写作、审查与验证。
+中文人文社科任务同时加载 `writing-humanities`；学校要求优先于模板示例。
+原有 Claude/Cursor hooks 不会自动成为 DSH hooks。详见 `.dsh/INSTALL.md`。
+
 
 **在 Claude Code 中：** 使用 `Skill` 工具。调用技能时，其内容会被加载并呈现给你 — 直接遵循即可。
 

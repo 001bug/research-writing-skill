@@ -11,3 +11,8 @@ plan/
 
 # Local draft image sources (optional)
 assets/source-images/
+
+# Python adaptation caches
+__pycache__/
+*.pyc
+.venv*/

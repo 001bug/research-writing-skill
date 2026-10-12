@@ -28,15 +28,20 @@ font_candidates_win = [
     'C:/Windows/Fonts/msyh.ttc',
 ]
 
+# Linux: discover installed CJK fonts through Matplotlib's font database.
+font_candidates_linux = [font.fname for font in fm.fontManager.ttflist
+                         if font.name in {'Noto Sans CJK SC', 'Noto Serif CJK SC',
+                                          'Noto Sans CJK JP', 'Noto Serif CJK JP'}]
+
 # 尝试加载字体
-for fp in font_candidates_mac + font_candidates_win:
+for fp in font_candidates_mac + font_candidates_win + font_candidates_linux:
     if Path(fp).exists():
         CHINESE_FONT = fm.FontProperties(fname=fp)
         break
 
 # 备用方案
 if CHINESE_FONT is None:
-    plt.rcParams['font.sans-serif'] = ['Heiti TC', 'STHeiti', 'SimHei', 'Microsoft YaHei']
+    plt.rcParams['font.sans-serif'] = ['Noto Sans CJK SC', 'Noto Sans CJK JP', 'Heiti TC', 'STHeiti', 'SimHei', 'Microsoft YaHei', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
 # ============================================================

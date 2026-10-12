@@ -1,0 +1,14 @@
+# Python 3.11+. Install into $DSH_HOME/research-writing/.venv, never system Python.
+requests>=2.32,<3
+PyMuPDF>=1.24,<2
+PyYAML>=6,<7
+numpy>=1.26,<3
+pandas>=2.2,<3
+scipy>=1.13,<2
+matplotlib>=3.8,<4
+seaborn>=0.13,<1
+scikit-learn>=1.5,<2
+statsmodels>=0.14,<1
+pingouin>=0.5,<1
+openpyxl>=3.1,<4
+plotly>=5,<7

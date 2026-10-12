@@ -3,6 +3,24 @@ name: writing-core
 description: Use when writing or revising academic papers, especially Chinese journal manuscripts, that need natural prose, de-AI-ification, Markdown formatting, or quality checks
 ---
 
+## DSH 运行约定
+
+仅在 DeepSeek Harness 中适用：先根据 `skill` 工具返回的 `resourceBase.path`
+解析真实技能目录，再读取资源根目录的 `.dsh/RUNTIME.md`，按其中约定执行。
+不要猜测仓库位置，也不要假定当前目录就是技能仓库。
+
+```bash
+# 将占位符替换为本次 skill 工具返回的 resourceBase.path（保留引号）。
+SKILL_DIR="$(realpath '<resourceBase.path>')"
+RESEARCH_WRITING_ROOT="$(dirname "$(dirname "$SKILL_DIR")")"
+RESEARCH_WRITING_PYTHON="${DSH_HOME:-$HOME/.dsh}/research-writing/.venv/bin/python"
+PAPER_ROOT="$(pwd -P)"
+cat "$RESEARCH_WRITING_ROOT/.dsh/RUNTIME.md"
+```
+
+脚本与内置模板使用资源根目录的绝对路径；论文、用户模板和计划写入当前论文工作区。
+以上变量只在当前 shell 调用有效，后续调用应重新设置或使用已经解析的绝对路径。
+
 # 核心写作规范
 
 本技能用于控制论文写作质量，重点是中文学术论文的自然表达、去AI化改写与可提交的Markdown排版。
@@ -144,7 +162,7 @@ description: Use when writing or revising academic papers, especially Chinese jo
 
 **macOS/Linux：**
 ```bash
-bash research-writing-skill/scripts/style_check.sh <文件.md>
+bash "$RESEARCH_WRITING_ROOT/scripts/style_check.sh" <文件.md>
 ```
 
 **Windows PowerShell：**

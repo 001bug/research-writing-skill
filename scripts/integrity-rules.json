@@ -1,0 +1,197 @@
+[
+  {
+    "path": "skills/using-research-writing/SKILL.md",
+    "pattern": "paper-orchestration",
+    "label": "orchestration route"
+  },
+  {
+    "path": "skills/using-research-writing/SKILL.md",
+    "pattern": "capability-use audit",
+    "label": "capability-use audit gate"
+  },
+  {
+    "path": "skills/using-research-writing/SKILL.md",
+    "pattern": "paper-orchestration.*writing-chapters|quality",
+    "label": "medium/full-paper trigger"
+  },
+  {
+    "path": "skills/using-research-writing/SKILL.md",
+    "pattern": "paper-orchestration.*shape=box",
+    "label": "DOT flow includes orchestration"
+  },
+  {
+    "path": "skills/writing-chapters/SKILL.md",
+    "pattern": "evidence-driven-writing",
+    "label": "evidence-driven chapter routing"
+  },
+  {
+    "path": "skills/writing-chapters/SKILL.md",
+    "pattern": "输入.*输出|input-to-output",
+    "label": "methodology input-to-output flow"
+  },
+  {
+    "path": "skills/writing-chapters/SKILL.md",
+    "pattern": "正文污染|contamination firewall",
+    "label": "body contamination firewall"
+  },
+  {
+    "path": "skills/writing-chapters/SKILL.md",
+    "pattern": "contamination firewall|user requirements",
+    "label": "user-request exclusion rule"
+  },
+  {
+    "path": "skills/literature-review/SKILL.md",
+    "pattern": "证据.*论点|evidence.*claim",
+    "label": "evidence-claim mapping"
+  },
+  {
+    "path": "skills/literature-review/SKILL.md",
+    "pattern": "citation slot|引用位置",
+    "label": "citation placement planning"
+  },
+  {
+    "path": "skills/figures-python/SKILL.md",
+    "pattern": "data manifest|数据清单",
+    "label": "figure data manifest"
+  },
+  {
+    "path": "skills/figures-python/SKILL.md",
+    "pattern": "mock|模拟|synthetic",
+    "label": "mock data boundary"
+  },
+  {
+    "path": "skills/verification/SKILL.md",
+    "pattern": "check_skill_integrity\\.ps1",
+    "label": "skill integrity verification"
+  },
+  {
+    "path": "skills/verification/SKILL.md",
+    "pattern": "research_quality_gate\\.ps1",
+    "label": "manuscript quality gate verification"
+  },
+  {
+    "path": "SKILL.md",
+    "pattern": "paper-orchestration",
+    "label": "main skill list includes orchestration"
+  },
+  {
+    "path": "SKILL.md",
+    "pattern": "evidence-driven-writing",
+    "label": "main skill list includes evidence-driven writing"
+  },
+  {
+    "path": "SKILL.md",
+    "pattern": "experiment-results-planning",
+    "label": "main skill list includes experiment planning"
+  },
+  {
+    "path": "AGENTS.md",
+    "pattern": "paper-orchestration",
+    "label": "agent guide mentions orchestration"
+  },
+  {
+    "path": "CLAUDE.md",
+    "pattern": "paper-orchestration",
+    "label": "Claude guide mentions orchestration"
+  },
+  {
+    "path": "README.md",
+    "pattern": "paper-orchestration",
+    "label": "Chinese README mentions orchestration"
+  },
+  {
+    "path": "README_EN.md",
+    "pattern": "paper-orchestration",
+    "label": "English README mentions orchestration"
+  },
+  {
+    "path": "README.md",
+    "pattern": "research_quality_gate\\.ps1",
+    "label": "Chinese README mentions quality gate"
+  },
+  {
+    "path": "README_EN.md",
+    "pattern": "research_quality_gate\\.ps1",
+    "label": "English README mentions quality gate"
+  },
+  {
+    "path": "AGENTS.md",
+    "pattern": "research_quality_gate\\.ps1",
+    "label": "agent guide mentions quality gate"
+  },
+  {
+    "path": "CLAUDE.md",
+    "pattern": "research_quality_gate\\.ps1",
+    "label": "Claude guide mentions quality gate"
+  },
+  {
+    "path": "plan-template/project-overview.md",
+    "pattern": "task-packets",
+    "label": "plan template includes task packets"
+  },
+  {
+    "path": "plan-template/project-overview.md",
+    "pattern": "evidence-map\\.md",
+    "label": "plan template includes evidence map"
+  },
+  {
+    "path": "plan-template/progress.md",
+    "pattern": "Capability-use audit",
+    "label": "progress template includes capability-use audit"
+  },
+  {
+    "path": "plan-template/stage-gates.md",
+    "pattern": "D0",
+    "label": "stage gates include experiment protocol gate"
+  },
+  {
+    "path": "plan-template/stage-gates.md",
+    "pattern": "D5",
+    "label": "stage gates include peer review gate"
+  },
+  {
+    "path": "skills/literature-review/SKILL.md",
+    "pattern": "--format json",
+    "label": "literature docs use supported JSON flag"
+  },
+  {
+    "path": "skills/literature-review/SKILL.md",
+    "pattern": "--output refs\\.bib",
+    "label": "literature docs use supported output flag"
+  },
+  {
+    "path": "skills/paper-orchestration/SKILL.md",
+    "pattern": "plan/task-packets",
+    "label": "orchestration requires persistent task packets"
+  },
+  {
+    "path": "skills/paper-orchestration/SKILL.md",
+    "pattern": "Validation commands",
+    "label": "task packet includes validation commands"
+  },
+  {
+    "path": ".claude-plugin/plugin.json",
+    "pattern": "\"version\":\\s*\"3\\.1\\.0\"",
+    "label": "Claude plugin version matches current skill"
+  },
+  {
+    "path": ".cursor-plugin/plugin.json",
+    "pattern": "\"version\":\\s*\"3\\.1\\.0\"",
+    "label": "Cursor plugin version matches current skill"
+  },
+  {
+    "path": "CHANGELOG.md",
+    "pattern": "\\[3\\.1\\.0\\]",
+    "label": "changelog contains current version"
+  },
+  {
+    "path": "README.md",
+    "pattern": "3\\.1\\.0",
+    "label": "Chinese README version current"
+  },
+  {
+    "path": "README_EN.md",
+    "pattern": "Version:\\s*3\\.1\\.0",
+    "label": "English README version current"
+  }
+]

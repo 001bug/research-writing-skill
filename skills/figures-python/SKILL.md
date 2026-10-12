@@ -3,6 +3,24 @@ name: figures-python
 description: Use when creating data visualizations for papers - generates publication-quality plots with top-journal color schemes
 ---
 
+## DSH 运行约定
+
+仅在 DeepSeek Harness 中适用：先根据 `skill` 工具返回的 `resourceBase.path`
+解析真实技能目录，再读取资源根目录的 `.dsh/RUNTIME.md`，按其中约定执行。
+不要猜测仓库位置，也不要假定当前目录就是技能仓库。
+
+```bash
+# 将占位符替换为本次 skill 工具返回的 resourceBase.path（保留引号）。
+SKILL_DIR="$(realpath '<resourceBase.path>')"
+RESEARCH_WRITING_ROOT="$(dirname "$(dirname "$SKILL_DIR")")"
+RESEARCH_WRITING_PYTHON="${DSH_HOME:-$HOME/.dsh}/research-writing/.venv/bin/python"
+PAPER_ROOT="$(pwd -P)"
+cat "$RESEARCH_WRITING_ROOT/.dsh/RUNTIME.md"
+```
+
+脚本与内置模板使用资源根目录的绝对路径；论文、用户模板和计划写入当前论文工作区。
+以上变量只在当前 shell 调用有效，后续调用应重新设置或使用已经解析的绝对路径。
+
 # Python 数据图表
 
 本技能指导使用 Python 生成科研论文级别的数据图表。
@@ -32,7 +50,7 @@ conda activate research
 
 **必需库**：
 ```bash
-pip install matplotlib seaborn numpy pandas
+"$RESEARCH_WRITING_PYTHON" -m pip install -r "$RESEARCH_WRITING_ROOT/requirements-dsh.lock.txt"
 ```
 
 如环境未配置，调用 `environment-setup` 技能。
@@ -270,3 +288,10 @@ plt.savefig('figure.png', dpi=450, bbox_inches='tight')
 ```python
 ax.legend(loc='upper left', bbox_to_anchor=(1.02, 1))
 ```
+
+
+## DSH 图表产物位置
+
+先将 `$RESEARCH_WRITING_ROOT/templates/figure-template.py` 复制到论文工作区的 `figures/` 再修改运行。
+使用独立 Python 环境和无界面后端 `MPLBACKEND=Agg`；不得直接运行共享模板在技能仓库输出图片。
+Linux 中文字体优先使用已安装的 Noto Sans CJK SC / Noto Serif CJK SC；缺失时报告字体能力缺口。

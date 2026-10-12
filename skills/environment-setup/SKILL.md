@@ -3,6 +3,27 @@ name: environment-setup
 description: Use when Python environment setup is needed for data visualization or conda installation is required
 ---
 
+## DSH 运行约定
+
+仅在 DeepSeek Harness 中适用：先根据 `skill` 工具返回的 `resourceBase.path`
+解析真实技能目录，再读取资源根目录的 `.dsh/RUNTIME.md`，按其中约定执行。
+不要猜测仓库位置，也不要假定当前目录就是技能仓库。
+
+```bash
+> DSH / Linux：环境安装仅使用文末“DSH / Linux 独立环境”和 `.dsh/INSTALL.md`。
+> 下面 Conda、全局 pip、镜像和 shell 初始化说明面向其他宿主，不在 DSH 适配流程中执行。
+
+# 将占位符替换为本次 skill 工具返回的 resourceBase.path（保留引号）。
+SKILL_DIR="$(realpath '<resourceBase.path>')"
+RESEARCH_WRITING_ROOT="$(dirname "$(dirname "$SKILL_DIR")")"
+RESEARCH_WRITING_PYTHON="${DSH_HOME:-$HOME/.dsh}/research-writing/.venv/bin/python"
+PAPER_ROOT="$(pwd -P)"
+cat "$RESEARCH_WRITING_ROOT/.dsh/RUNTIME.md"
+```
+
+脚本与内置模板使用资源根目录的绝对路径；论文、用户模板和计划写入当前论文工作区。
+以上变量只在当前 shell 调用有效，后续调用应重新设置或使用已经解析的绝对路径。
+
 # 环境配置
 
 本技能用于在终端完成 Python 画图环境的全流程配置。
@@ -177,3 +198,11 @@ pip install -r requirements.txt
 2. 先识别系统，再给对应命令，禁止跨系统混发命令
 3. 执行完成后，必须回写 `plan/progress.md`
 </HARD-GATE>
+
+
+## DSH / Linux 独立环境
+
+使用 `.dsh/INSTALL.md` 中的虚拟环境安装步骤，运行
+`"$RESEARCH_WRITING_PYTHON" -m pip ...`，不要改动系统 Python、全局镜像或其他项目环境。
+优先用 `requirements-dsh.lock.txt` 复现本机已验证版本。
+不依赖 Conda，不要求重启电脑。缺少可选 TeX 编译器时报告限制，仍可输出 LaTeX 源码。
